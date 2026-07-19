@@ -1,0 +1,1 @@
+curl -s http://localhost:8085/api/grid

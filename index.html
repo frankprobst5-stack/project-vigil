@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>PROJECT VIGIL</title>
+    <style>
+        body { background: #080a06; color: #a4b28d; font-family: monospace; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+        .card { background: #10140e; border: 1px solid #38402f; padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; }
+        h1 { color: #d1d5cb; border-bottom: 2px solid #38402f; padding-bottom: 10px; }
+        h2 { color: #ffb000; margin-top: 0; font-size: 16px; }
+        .btn { background: #151c12; border: 1px solid #455239; color: #a4b28d; padding: 8px; width: 100%; cursor: pointer; font-family: monospace; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+        .btn:hover { color: #00ff66; border-color: #00ff66; }
+        .cam-feed { width: 100%; height: 180px; background: #000; border: 1px solid #38402f; margin-top: 10px; border-radius: 2px; object-fit: cover; }
+    </style>
+</head>
+<body>
+    <h1>🛰️ PROJECT VIGIL // COMMAND MATRIX <button class="btn" style="width: auto; margin: 0; padding: 8px 16px;" onclick="window.location.href='/index.html'">⬅ COCKPIT MATRIX</button></h1>
+    
+    <div id="status" style="color:#00ff66;font-weight:bold;margin-bottom:20px;">INITIALIZING...</div>
+    <div class="grid" id="container"></div>
+    
+</div>
+
+    <script>
+        async function updateHUD() {
+            try {
+                const r = await fetch("/api/grid?t=" + Date.now());
+                if (!r.ok) throw new Error("Server disconnected");
+                const d = await r.json();
+                let h = "";
+                
+                for (const id in d) {
+                    const dev = d[id];
+                    let cameraElement = "";
+                    
+                    if (dev.stream_url && dev.stream_url.trim() !== "") {
+                        cameraElement = `<img class="cam-feed" src="${dev.stream_url}" alt="LIVE CAMERA INTERCEPT" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://w3.org\' width=\'100\' height=\'50\' viewBox=\'0 0 100 50\'><rect width=\'100\' height=\'50\' fill=\'%23050704\'/><text x=\'50\' y=\'28\' font-family=\'monospace\' font-size=\'6\' fill=\'%23ff3333\' text-anchor=\'middle\'>[ FEED OFFLINE ]</text></svg>'">`;
+                    }
+                    
+                    h += `
+                    <div class="card">
+                        <div>
+                            <h2>🎯 NODE: ${id.toUpperCase()}</h2>
+                            <div style="margin-bottom:4px;">PROFILE: <span style="color:#ffb000;">${(dev.type || "GENERIC_RELAY").toUpperCase()}</span></div>
+                            <div style="margin-bottom:4px;">IP ROUTE: <span style="font-family:monospace; color:#87986a;">${dev.ip || "0.0.0.0"}</span></div>
+                            <div style="margin-bottom:4px;">STATUS: <span style="color:${dev.state === 'ON' ? '#00ff66' : '#ff3333'}; font-weight:bold;">${dev.state || "OFF"}</span></div>
+                            <div style="margin-bottom:4px; font-size:11px; color:#556346;">LAST CAPTURE: ${dev.last_seen || "NEVER"}</div>
+                            ${cameraElement}
+                        </div>
+                        <button class="btn" onclick="toggleRelay('${id}')">TOGGLE OVERRIDE RELAY</button>
+                    </div>`;
+                }
+                
+                document.getElementById("container").innerHTML = h || `<div class="scanning-text">SCANNING AIRWAVES... NO OPEN AUTOMATION HARDWARE CAPTURED YET...</div>`;
+                document.getElementById("status").innerText = "Sovereign Base Controller Online // Monitoring Local Infrastructure";
+                document.getElementById("status").style.color = "#00ff66";
+            } catch (e) {
+                document.getElementById("status").innerText = "METRIC DROP (Project VIGIL Network Engine Interrupted)";
+                document.getElementById("status").style.color = "#ff3333";
+            }
+        }
+
+        async function toggleRelay(id) {
+            try {
+                await fetch("/api/toggle", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ device_id: id })
+                });
+                setTimeout(updateHUD, 150);
+            } catch (err) {
+                console.error("Outbound override directive failed:", err);
+            }
+        }
+
+        setInterval(updateHUD, 2000);
+        window.onload = updateHUD;
+    </script>
+</body>
+</html>

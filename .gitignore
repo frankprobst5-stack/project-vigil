@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+
+# Runtime state written by vigil_core.py / vigil_kernel.py while running —
+# local device/power state, not source, regenerates on first run.
+/vigil_state.json
+/vigil_grid_ledger.json
+
+/.claude/
+/.env

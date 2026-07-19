@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT VIGIL - Master Hardware Catalog & Blueprint</title>
+    <style>
+        body { font-family: 'Ubuntu', monospace; background: #0c0d0a; color: #dcdfd8; padding: 40px; margin: 0; line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header-box { border-bottom: 2px solid #454d39; padding-bottom: 20px; margin-bottom: 35px; }
+        h1 { color: #8fa072; margin: 0 0 10px 0; font-size: 1.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        .meta-line { font-family: monospace; font-size: 0.9rem; color: #ffb000; margin: 4px 0; text-transform: uppercase; }
+        
+        .catalog-section { background: #151811; border: 1px solid #333a29; border-radius: 8px; padding: 30px; margin-bottom: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        h2 { color: #ffb000; font-family: monospace; font-size: 1.2rem; margin-top: 0; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333a29; padding-bottom: 10px; margin-bottom: 20px; }
+        
+        .hardware-item { background: #0c0d0a; border-left: 4px solid #8fa072; padding: 15px 25px; margin: 15px 0; border-radius: 0 6px 6px 0; }
+        .item-title { font-family: monospace; font-weight: bold; color: #8fa072; font-size: 1.05rem; display: block; margin-bottom: 6px; text-transform: uppercase; }
+        .item-details { color: #c0c6ba; font-size: 0.95rem; }
+        
+        .callout-info { background: rgba(75, 106, 138, 0.12); border-left: 4px solid #4b6a8a; padding: 15px; border-radius: 4px; margin: 20px 0; font-size: 0.9rem; color: #b1b9c2; }
+        strong { color: #ffffff; }
+        code { background: #1c2016; border: 1px solid #333a29; border-radius: 4px; padding: 3px 8px; font-family: monospace; color: #ffb000; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-box">
+            <h1>🛰️ PROJECT VIGIL // OFF-GRID OPEN HARDWARE CATALOG</h1>
+            <div class="meta-line">DOC_CLASS: Cloud-Free Infrastructure Compatibility Directive</div>
+            <div class="meta-line">SYSTEM_VERIFICATION: v3.5.0 // ZERO-TRUST COMPLIANT ARCHITECTURE</div>
+            <div class="meta-line">TARGET INTERFACES: Local Area Network RTSP, ONVIF, and Tasmota AFSK Gateways</div>
+        </div>
+
+        <div class="callout-info">
+            <strong>🛡️ MANDATORY OPERATION PROTOCOL:</strong> To maintain absolute data sovereignty, all devices deployed on the local subnet must run firmware that operates natively offline. Never run corporate cloud companion apps. Block outbound internet access for these hardware nodes entirely inside your router settings.
+        </div>
+
+        <!-- SECTION 1 -->
+        <div class="catalog-section">
+            <h2>Category 01: Surveillance & Security Cameras (RTSP/ONVIF)</h2>
+            <p>To pull live video streams without external corporate cloud servers, hardware must support raw Real-Time Streaming Protocol layout channels.</p>
+            
+            <div class="hardware-item">
+                <span class="item-title">📷 Reolink Cameras (RLC Series Primes)</span>
+                <span class="item-details">Commercial-grade, rugged exterior security hardware. When isolated from the internet, they drop high-definition RTSP streams straight onto your local router.
+                <br>• <strong>Target Protocol Route:</strong> <code>rtsp://[Device_IP]/h264Preview_01_main</code></span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">📷 Amcrest Hardware (UltraHD Series)</span>
+                <span class="item-details">Standard hardware units equipped with native ONVIF and RTSP broadcasting options accessible right out of the box with zero external firmware compilation modifications required.</span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">📷 ESP32-CAM Micro-Node (Open DIY Option)</span>
+                <span class="item-details">A budget-friendly, open-source micro-controller board featuring a built-in lens module. Flash it with custom offline code to stream low-power, lightweight video blocks anywhere inside your perimeter lines.</span>
+            </div>
+        </div>
+
+        <!-- SECTION 2 -->
+        <div class="catalog-section">
+            <h2>Category 02: Power Relays & Smart Plugs (Tasmota/ESPHome)</h2>
+            <p>These power interfaces must accept open local socket API JSON updates and manage heavy voltage load switching entirely on-site.</p>
+
+            <div class="hardware-item">
+                <span class="item-title">⚡ Sonoff S31 (Pre-Flashed Tasmota Edition)</span>
+                <span class="item-details">Heavy-duty 15A outlet smart plugs. They run an independent offline web server right on your router lane, tracking raw electrical consumption parameters (wattage, current, voltage) and transmitting data back to the core.</span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">⚡ Athom Smart Plugs (ESPHome Native)</span>
+                <span class="item-details">Sovereign plugs delivered pre-installed with open-source firmware from factory lanes. Bypasses all corporate application registration blocks and connects directly to local scripts.</span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">⚡ Shelly Plus 1 / Shelly Pro Relays</span>
+                <span class="item-details">Microscopic wireless automation relays engineered to fit directly behind standard household wall junction outlets to convert existing light lines into local smart conduits.</span>
+            </div>
+        </div>
+
+        <!-- SECTION 3 -->
+        <div class="catalog-section">
+            <h2>Category 03: Lighting & Wall Switches (Zero-Cloud Modules)</h2>
+            <p>Lighting control layers that listen continuously for automated network commands and manual frontend toggle overrides.</p>
+
+            <div class="hardware-item">
+                <span class="item-title">💡 Kauf Smart Bulbs (ESPHome)</span>
+                <span class="item-details">Energy-efficient LED bulbs that bind directly to local wireless router parameters and accept simple incoming network socket execution scripts immediately.</span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">💡 Martin Jerry Physical Wall Switches</span>
+                <span class="item-details">Heavy-duty physical hardware toggle switches pre-flashed with open-source firmware, optimal for managing overhead fan arrays and property lighting loops.</span>
+            </div>
+        </div>
+
+        <!-- SECTION 4 -->
+        <div class="catalog-section">
+            <h2>Category 04: Perimeter Triplines & Environmental Sensors</h2>
+            <p>Automated input sensors that detect physical perimeter movements and trigger immediate, automated security overrides.</p>
+
+            <div class="hardware-item">
+                <span class="item-title">🚨 Shelly Door/Window 2 Wireless Sensors</span>
+                <span class="item-details">Magnetic contact sensors that execute an instantaneous, fast network POST text blast to <code>/api/update</code> the exact millisecond a window boundary or property gate tripline is broken.</span>
+            </div>
+
+            <div class="hardware-item">
+                <span class="item-title">🚨 Ecowitt WH31 Agricultural Sensors</span>
+                <span class="item-details">Highly rugged, long-range wireless soil moisture and environmental temperature monitoring modules that log regional field status metrics completely offline.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
