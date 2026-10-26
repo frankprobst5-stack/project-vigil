@@ -1,0 +1,10 @@
+# Pinned to whatever was actually installed and running in the live
+# citadel-vigil container at the time this was written (2026-09-14),
+# captured via `pip show zeroconf paho-mqtt` -- not a guess, the exact
+# versions already proven working. Both are genuinely used (verified
+# directly, not just trusted from the runtime pip install line) via
+# deferred/in-function imports in vigil_kernel.py: zeroconf inside
+# discover_devices() (the manual's "Scan Now" mDNS feature), paho.mqtt
+# inside the Zigbee2MQTT adapter.
+zeroconf==0.151.3
+paho-mqtt==2.1.0

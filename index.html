@@ -4,22 +4,56 @@
     <meta charset="utf-8">
     <title>PROJECT VIGIL</title>
     <style>
-        body { background: #080a06; color: #a4b28d; font-family: monospace; padding: 20px; }
+        /* Citadel Ecosystem brand palette, adopted 2026-09-18 -- missed in
+           that pass (this file lives under appdata/project-vigil/, not
+           appdata/cockpit/, so the original rebrand sweep never found
+           it). Same real vars as index.html/news.html/logistics.html.
+           --green stays a real semantic "device ON / secure" indicator
+           here (was a pure neon #00ff66 before), not just a palette
+           swap -- same real role var(--green) already plays in
+           logistics.html's own status badges. */
+        :root {
+            --bg: #05090d; --panel: #071a2c; --panel-alt: #0a2038; --border: #2a4a66; --border-dim: #16283a;
+            --text: #e7f1f8; --text-dim: #aebbc7; --text-faint: #71899d;
+            --accent: #008dff; --accent-bright: #28c8ff; --amber: #ffb000; --green: #59d67c; --red: #e05252;
+        }
+        body { background: var(--bg); color: var(--text); font-family: monospace; padding: 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-        .card { background: #10140e; border: 1px solid #38402f; padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; }
-        h1 { color: #d1d5cb; border-bottom: 2px solid #38402f; padding-bottom: 10px; }
-        h2 { color: #ffb000; margin-top: 0; font-size: 16px; }
-        .btn { background: #151c12; border: 1px solid #455239; color: #a4b28d; padding: 8px; width: 100%; cursor: pointer; font-family: monospace; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
-        .btn:hover { color: #00ff66; border-color: #00ff66; }
-        .cam-feed { width: 100%; height: 180px; background: #000; border: 1px solid #38402f; margin-top: 10px; border-radius: 2px; object-fit: cover; }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 20px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between; }
+        h1 { color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+        h2 { color: var(--amber); margin-top: 0; font-size: 16px; }
+        .btn { background: var(--panel-alt); border: 1px solid var(--border); color: var(--text); padding: 8px; width: 100%; cursor: pointer; font-family: monospace; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
+        .btn:hover { color: var(--green); border-color: var(--green); }
+        .cam-feed { width: 100%; height: 180px; background: #000; border: 1px solid var(--border); margin-top: 10px; border-radius: 2px; object-fit: cover; }
     </style>
 </head>
 <body>
     <h1>🛰️ PROJECT VIGIL // COMMAND MATRIX <button class="btn" style="width: auto; margin: 0; padding: 8px 16px;" onclick="window.location.href='/index.html'">⬅ COCKPIT MATRIX</button></h1>
-    
-    <div id="status" style="color:#00ff66;font-weight:bold;margin-bottom:20px;">INITIALIZING...</div>
+
+    <div id="status" style="color:var(--green);font-weight:bold;margin-bottom:20px;">INITIALIZING...</div>
+
+    <!-- Solar/security telemetry -- real data from /api/vigil/state, added
+         2026-09-13. Previously ran as its own container with no dashboard
+         panel anywhere (ROADMAP.md Phase C/D). -->
+    <div class="card" style="margin-bottom: 20px;">
+        <h2>⚡ Power & Security Telemetry</h2>
+        <div id="telemetry-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; font-size: 13px;">Loading...</div>
+        <div style="font-size:11px; color:var(--text-faint); margin-top:10px;">Last update: <span id="telemetry-updated">--</span></div>
+    </div>
+
+    <!-- Local network device discovery (mDNS) -- real, added 2026-09-13.
+         Honestly reports whatever it actually finds on your LAN; an empty
+         result on a network with no Tasmota/Shelly/ESPHome hardware yet
+         is correct, not broken. -->
+    <div class="card" style="margin-bottom: 20px;">
+        <h2>🔍 Discover Local Devices</h2>
+        <p style="font-size:12px; color:var(--text-dim); margin-top:0;">Scans your LAN for Tasmota, Shelly, and ESPHome devices via mDNS (~4 seconds). Register anything found below to bring it under manual/automated control.</p>
+        <button class="btn" style="width:auto; padding: 8px 20px;" onclick="runDiscovery()">Scan Now</button>
+        <div id="discover-results" style="margin-top:12px; font-size:13px;"></div>
+    </div>
+
     <div class="grid" id="container"></div>
-    
+
 </div>
 
     <script>
@@ -42,10 +76,10 @@
                     <div class="card">
                         <div>
                             <h2>🎯 NODE: ${id.toUpperCase()}</h2>
-                            <div style="margin-bottom:4px;">PROFILE: <span style="color:#ffb000;">${(dev.type || "GENERIC_RELAY").toUpperCase()}</span></div>
-                            <div style="margin-bottom:4px;">IP ROUTE: <span style="font-family:monospace; color:#87986a;">${dev.ip || "0.0.0.0"}</span></div>
-                            <div style="margin-bottom:4px;">STATUS: <span style="color:${dev.state === 'ON' ? '#00ff66' : '#ff3333'}; font-weight:bold;">${dev.state || "OFF"}</span></div>
-                            <div style="margin-bottom:4px; font-size:11px; color:#556346;">LAST CAPTURE: ${dev.last_seen || "NEVER"}</div>
+                            <div style="margin-bottom:4px;">PROFILE: <span style="color:var(--amber);">${(dev.type || "GENERIC_RELAY").toUpperCase()}</span></div>
+                            <div style="margin-bottom:4px;">IP ROUTE: <span style="font-family:monospace; color:var(--accent);">${dev.ip || "0.0.0.0"}</span></div>
+                            <div style="margin-bottom:4px;">STATUS: <span style="color:${dev.state === 'ON' ? 'var(--green)' : 'var(--red)'}; font-weight:bold;">${dev.state || "OFF"}</span></div>
+                            <div style="margin-bottom:4px; font-size:11px; color:var(--text-faint);">LAST CAPTURE: ${dev.last_seen || "NEVER"}</div>
                             ${cameraElement}
                         </div>
                         <button class="btn" onclick="toggleRelay('${id}')">TOGGLE OVERRIDE RELAY</button>
@@ -54,10 +88,10 @@
                 
                 document.getElementById("container").innerHTML = h || `<div class="scanning-text">SCANNING AIRWAVES... NO OPEN AUTOMATION HARDWARE CAPTURED YET...</div>`;
                 document.getElementById("status").innerText = "Sovereign Base Controller Online // Monitoring Local Infrastructure";
-                document.getElementById("status").style.color = "#00ff66";
+                document.getElementById("status").style.color = "var(--green)";
             } catch (e) {
                 document.getElementById("status").innerText = "METRIC DROP (Project VIGIL Network Engine Interrupted)";
-                document.getElementById("status").style.color = "#ff3333";
+                document.getElementById("status").style.color = "var(--red)";
             }
         }
 
@@ -74,8 +108,63 @@
             }
         }
 
+        // ---- Power & security telemetry ----
+        const TELEMETRY_LABELS = {
+            solar_battery_soc: "Battery SOC",
+            solar_input_watts: "Solar Input",
+            critical_power_bus: "Critical Bus",
+            secondary_power_bus: "Secondary Bus",
+            perimeter_tripline: "Tripline",
+            smart_plug_fridge: "Fridge Plug",
+            perimeter_lights: "Perimeter Lights",
+        };
+        async function updateTelemetry() {
+            try {
+                const r = await fetch("/api/vigil/state?t=" + Date.now());
+                if (!r.ok) throw new Error("unreachable");
+                const d = await r.json();
+                const grid = document.getElementById("telemetry-grid");
+                grid.innerHTML = Object.entries(TELEMETRY_LABELS).map(([key, label]) => {
+                    const val = d[key];
+                    const isOnOff = val === "ON" || val === "OFF" || val === "SECURE" || val === "TRIPPED";
+                    const color = (val === "ON" || val === "SECURE") ? "var(--green)" : (val === "TRIPPED" ? "var(--red)" : "var(--text)");
+                    return `<div><div style="color:var(--text-faint);">${label}</div><div style="color:${isOnOff ? color : 'var(--amber)'}; font-weight:bold;">${val}${key === 'solar_battery_soc' ? '%' : key === 'solar_input_watts' ? 'W' : ''}</div></div>`;
+                }).join('');
+                document.getElementById("telemetry-updated").textContent = d.last_update || "--";
+            } catch (e) {
+                document.getElementById("telemetry-grid").innerHTML = '<div style="color:var(--red);">Telemetry unreachable</div>';
+            }
+        }
+
+        // ---- Local device discovery ----
+        async function runDiscovery() {
+            const box = document.getElementById("discover-results");
+            box.innerHTML = "Scanning local network (~4 seconds)...";
+            try {
+                const r = await fetch("/api/vigil/discover");
+                const d = await r.json();
+                if (d.status !== "success") {
+                    box.innerHTML = `<span style="color:var(--red);">${d.detail || "Discovery failed"}</span>`;
+                    return;
+                }
+                if (!d.devices.length) {
+                    box.innerHTML = '<span style="color:var(--text-dim);">No Tasmota/Shelly/ESPHome devices found on this network.</span>';
+                    return;
+                }
+                box.innerHTML = d.devices.map(dev => `
+                    <div style="background:var(--panel-alt); padding:8px 12px; margin-bottom:6px; border-radius:3px;">
+                        <b>${dev.name}</b> -- ${dev.likely_protocol} at ${dev.ip || '?'}:${dev.port || '?'}
+                    </div>
+                `).join('');
+            } catch (e) {
+                box.innerHTML = '<span style="color:var(--red);">Discovery request failed -- see console.</span>';
+                console.error(e);
+            }
+        }
+
         setInterval(updateHUD, 2000);
-        window.onload = updateHUD;
+        setInterval(updateTelemetry, 5000);
+        window.onload = () => { updateHUD(); updateTelemetry(); };
     </script>
 </body>
 </html>

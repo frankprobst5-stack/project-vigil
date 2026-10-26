@@ -1,0 +1,24 @@
+# Real Dockerfile, added 2026-09-14 (see appdata/media-vault/Dockerfile's
+# own comment for the full "shine offline" reasoning -- vigil was one of
+# the 5 services that used to `pip install` at every container restart).
+#
+# Separate file from Dockerfile.camera below since both vigil and
+# ibris-motion (the camera module) share this same appdata/project-vigil/
+# directory as their code but need different base images and
+# dependencies -- disambiguated via Compose's `build.dockerfile` field.
+#
+# vigil_kernel.py itself STAYS volume-mounted (see
+# modules/vigil/compose.fragment.yml's own `../../appdata/project-vigil:/app`
+# mount) -- this only removes the runtime dependency install.
+FROM python:3.10-alpine
+
+# ffmpeg, added 2026-09-16 for camera_bridge.py's real RTSP-to-MJPEG
+# camera ingestion (see that file's own comment for what it does and
+# why a bridge is needed at all). Alpine's own package, not a
+# pip-installed wheel -- ffmpeg is a real binary, not a Python library.
+RUN apk add --no-cache ffmpeg
+
+COPY requirements-docker-vigil.txt /tmp/requirements-docker-vigil.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-docker-vigil.txt
+
+WORKDIR /app

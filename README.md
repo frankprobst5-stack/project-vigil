@@ -19,10 +19,61 @@ chmod +x install.sh
 This automatically updates system dependencies, provisions Python 3, sets up file structures, and configures the environment execution wrappers.
 
 ### 2. Launch the Matrix
-To launch the entire dashboard infrastructure, initialize background server workers, and fire up your offline browser interface instantly, execute the unified launcher:
-```bash
-./launch_matrix.sh
+
+**Within Citadel** (this embedded copy's actual deployment), Vigil runs as
+Citadel's own `vigil` Docker service -- see the root `docker-compose.yml`
+and `ROADMAP.md` Phase D, not a standalone launcher script.
+
+---
+
+## 🔌 Real Hardware Control (added 2026-09-13)
+
+`vigil_kernel.py` includes a real adapter registry for controlling
+devices found in the registry, targeting each ecosystem's own documented
+local API (no cloud account, no vendor app):
+
+| Protocol | Docs verified against |
+|---|---|
+| `tasmota` | https://tasmota.github.io/docs/Commands/#power |
+| `shelly_gen1` | https://shelly-api-docs.shelly.cloud/gen1/#shelly-relay-0-1 |
+| `shelly_gen2` | https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Switch/ |
+| `esphome` | https://esphome.io/web-api/ (needs the device's `web_server:` component enabled) |
+| `zigbee2mqtt` | https://www.zigbee2mqtt.io/guide/usage/mqtt_topics_and_messages.html |
+
+**Honest status:** these are written and unit-tested against each
+protocol's real documented API shape, but none have been verified
+against real physical hardware as of this writing. If you're trying one
+of these against a real device, please report back what does and
+doesn't work.
+
+To wire a registered device to a real adapter, include `protocol` (and
+any `adapter_args` the adapter needs -- see each function's docstring in
+`vigil_kernel.py`) in its registration payload:
+```json
+{
+  "device_id": "LIVING_ROOM_SWITCH",
+  "ip": "192.168.1.105",
+  "type": "Smart Power Relay",
+  "state": "OFF",
+  "protocol": "tasmota",
+  "adapter_args": {"relay": 1}
+}
 ```
+Leave `protocol` out (or empty) to keep a device registry-only, with no
+real hardware control -- this is the default, and matches this file's
+original behavior before adapters existed.
+
+**Not supported, and not planned: Blink and SimpliSafe.** Both are
+closed cloud ecosystems with no supported local API. This isn't a gap
+waiting to be closed -- don't buy either expecting it to work here.
+
+### Local Network Discovery
+
+`GET /api/discover` (proxied by Citadel's cockpit as
+`/api/vigil/discover`) scans your LAN via mDNS for Tasmota, Shelly, and
+ESPHome devices (~4 seconds) and reports whatever it actually finds. An
+empty result on a network with none of that hardware yet is the correct,
+honest answer -- not a bug.
 
 ---
 

@@ -42,7 +42,7 @@ sudo fuser -k 8085/tcp 2>/dev/null
 echo "🛰️  Deploying Project Vigil Environment Matrix..."
 
 # Tab 1: Initialize main Python Hub Engine Backend
-gnome-terminal --tab --title="VIGIL CORE" -- bash -c "python3 vigil_core.py; exec bash"
+gnome-terminal --tab --title="VIGIL CORE" -- bash -c "python3 vigil_kernel.py; exec bash"
 
 # Tab 2: Initialize Mock Hardware Network Broadcast Simulation Loop
 if [ -f "test_device.sh" ]; then

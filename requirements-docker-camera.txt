@@ -1,0 +1,7 @@
+# Camera (ibris-motion) wasn't running on this machine when this was
+# written (2026-09-14 -- needs the "camera" profile + real /dev/video0
+# hardware, neither present on this dev machine), so these are a fresh
+# resolve of this exact base image (python:3.10-slim) at the time of
+# writing rather than a pip-freeze from a live container.
+opencv-python-headless==5.0.0.93
+numpy==2.2.6

@@ -4,22 +4,30 @@
     <meta charset="utf-8">
     <title>CITADEL // MASTER HOME OPERATIONS BLUEPRINT</title>
     <style>
-        body { background: #080a06; color: #a4b28d; font-family: monospace; padding: 30px; line-height: 1.6; max-width: 1100px; margin: 0 auto; }
-        h1 { color: #d1d5cb; border-bottom: 2px solid #38402f; padding-bottom: 15px; text-transform: uppercase; font-size: 24px; letter-spacing: 1px; }
-        h2 { color: #ffb000; margin-top: 35px; border-bottom: 1px solid #252c1e; padding-bottom: 5px; font-size: 18px; text-transform: uppercase; }
-        h3 { color: #00ff66; font-size: 14px; margin-top: 20px; text-transform: uppercase; }
-        .section { background: #10140e; border: 1px solid #38402f; padding: 25px; border-radius: 4px; margin-bottom: 25px; }
-        .card-doc { background: #0b0e09; border-left: 4px solid #ffb000; padding: 15px; margin-bottom: 15px; border-radius: 0 4px 4px 0; }
-        .card-doc.radio { border-left-color: #528eff; }
-        .card-doc.intel { border-left-color: #00ff66; }
+        /* Citadel Ecosystem brand palette, adopted 2026-09-18 -- missed in
+           that pass (project-vigil/ isn't under appdata/cockpit/, same
+           real gap as this folder's own index.html). */
+        :root {
+            --bg: #05090d; --panel: #071a2c; --panel-alt: #0a2038; --border: #2a4a66; --border-dim: #16283a;
+            --text: #e7f1f8; --text-dim: #aebbc7; --text-faint: #71899d;
+            --accent: #008dff; --accent-bright: #28c8ff; --amber: #ffb000; --green: #59d67c; --red: #e05252;
+        }
+        body { background: var(--bg); color: var(--text); font-family: monospace; padding: 30px; line-height: 1.6; max-width: 1100px; margin: 0 auto; }
+        h1 { color: var(--text); border-bottom: 2px solid var(--border); padding-bottom: 15px; text-transform: uppercase; font-size: 24px; letter-spacing: 1px; }
+        h2 { color: var(--amber); margin-top: 35px; border-bottom: 1px solid var(--border-dim); padding-bottom: 5px; font-size: 18px; text-transform: uppercase; }
+        h3 { color: var(--green); font-size: 14px; margin-top: 20px; text-transform: uppercase; }
+        .section { background: var(--panel); border: 1px solid var(--border); padding: 25px; border-radius: 4px; margin-bottom: 25px; }
+        .card-doc { background: var(--panel-alt); border-left: 4px solid var(--amber); padding: 15px; margin-bottom: 15px; border-radius: 0 4px 4px 0; }
+        .card-doc.radio { border-left-color: var(--accent-bright); }
+        .card-doc.intel { border-left-color: var(--green); }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 15px; }
-        th, td { border: 1px solid #38402f; padding: 10px; text-align: left; font-size: 13px; }
-        th { background: #151c12; color: #d1d5cb; }
-        tr:nth-child(even) { background: #12170f; }
-        .highlight { color: #ffb000; font-weight: bold; }
-        .success { color: #00ff66; font-weight: bold; }
-        code { background: #050704; color: #00ff66; padding: 2px 5px; border-radius: 3px; }
-        pre { background: #050704; border: 1px solid #38402f; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        th, td { border: 1px solid var(--border); padding: 10px; text-align: left; font-size: 13px; }
+        th { background: var(--panel-alt); color: var(--text); }
+        tr:nth-child(even) { background: var(--panel-alt); }
+        .highlight { color: var(--amber); font-weight: bold; }
+        .success { color: var(--green); font-weight: bold; }
+        code { background: var(--bg); color: var(--green); padding: 2px 5px; border-radius: 3px; }
+        pre { background: var(--bg); border: 1px solid var(--border); padding: 15px; border-radius: 4px; overflow-x: auto; }
     </style>
 </head>
 <body>

@@ -1,0 +1,17 @@
+# Real Dockerfile, added 2026-09-14 (see Dockerfile.vigil in this same
+# directory, and appdata/media-vault/Dockerfile, for the full "shine
+# offline" reasoning and why this is a separate file from that one).
+#
+# python:3.10-slim (Debian), not -alpine, unchanged from before --
+# opencv-python-headless's prebuilt wheels target glibc, not musl (same
+# reasoning as Cloud9's own Dockerfile comment).
+#
+# ibris_motion.py itself STAYS volume-mounted (see
+# modules/camera/compose.fragment.yml's own mount) -- this only removes
+# the runtime dependency install.
+FROM python:3.10-slim
+
+COPY requirements-docker-camera.txt /tmp/requirements-docker-camera.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-docker-camera.txt
+
+WORKDIR /app

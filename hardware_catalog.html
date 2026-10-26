@@ -56,6 +56,13 @@
                 <span class="item-title">📷 ESP32-CAM Micro-Node (Open DIY Option)</span>
                 <span class="item-details">A budget-friendly, open-source micro-controller board featuring a built-in lens module. Flash it with custom offline code to stream low-power, lightweight video blocks anywhere inside your perimeter lines.</span>
             </div>
+
+            <div class="hardware-item">
+                <span class="item-title">🔌 Connecting a camera to Vigil (added 2026-09-16)</span>
+                <span class="item-details">Vigil has no manual "add device" form — like every other device type here, a camera is registered with one real API call, then its live feed shows up automatically on the dashboard. Point it at your own camera's real RTSP URL (the pattern above for your model), not a placeholder:
+                <br><code>curl -X POST http://&lt;citadel-host&gt;:8082/api/register \<br>&nbsp;&nbsp;-H "Content-Type: application/json" \<br>&nbsp;&nbsp;-d '{"device_id": "front-porch-cam", "ip": "192.168.1.50", "type": "camera", "rtsp_url": "rtsp://192.168.1.50:554/h264Preview_01_main"}'</code>
+                <br>Vigil bridges the RTSP feed to a browser-viewable stream itself (RTSP can't be shown in a plain web page directly) — no extra software needed on your end beyond this one call. Re-run the same command with a new <code>rtsp_url</code> if the camera's address ever changes.</span>
+            </div>
         </div>
 
         <!-- SECTION 2 -->
